@@ -2,8 +2,11 @@
 
 import sys
 
-#MY CODE
+#MY CODE Day 1
 
+HLT = 0b00000001 #HALT (exit)
+LDI = 0b10000010 # Set the value of a register to an integer.
+PRN = 0b01000111 # Print 
 
 
 class CPU:
@@ -11,8 +14,12 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
+        #MY CODE DAY 1
         self.ram = [0] * 256
         self.reg = [0] * 8
+        self.pc = 0
+        #==============
+
 
     def load(self):
         """Load a program into memory."""
@@ -45,6 +52,10 @@ class CPU:
         else:
             raise Exception("Unsupported ALU operation")
 
+
+
+
+
     def trace(self):
         """
         Handy function to print out the CPU state. You might want to call this
@@ -67,4 +78,42 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        # MY CODE DAY 1
+        running = True
+
+        while running:
+            # ram = registers 1 - 8
+            command = self.ram[self.pc]
+
+            # HLT INSTRUCTION       
+            if command == HLT:
+                running = False    
+            
+            # LDI INSTRUCTION
+            if command == LDI:
+                self.ram[self.pc + 2]
+
+            # PRN INSTRUCTION
+            if command == PRN:
+                num_to_print = self.ram[self.pc + 1]
+                print(num_to_print)
+                self.pc += 1
+
+          
+
+  #MY CODE DAY 1 Functions
+
+    def ram_read(self, mar):
+    
+    #MAR: Memory Address Register, holds the memory address we're reading or writing
+
+       mdr = self.ram[mar]
+       return mdr
+
+    def ram_write(self, mdr, mar):
+ 
+    #MDR: Memory Data Register, holds the value to write or the value just read
+    
+        self.ram[mar] = mdr
+
+#===================================================
