@@ -130,7 +130,7 @@ class CPU:
                 self.pc += move
 
             else:
-                print(f'Unknown instruction {ir} at address {self.pc}')
+                print(f'Unknown instruction {command} at address {self.pc}')
                 sys.exit(1)
           
 
