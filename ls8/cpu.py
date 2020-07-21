@@ -3,11 +3,12 @@
 import sys
 
 #MY CODE Day 1
-
 HLT = 0b00000001 #HALT (exit)
 LDI = 0b10000010 # Set the value of a register to an integer.
 PRN = 0b01000111 # Print 
 
+# MY CODE DAY 2
+MUL = 0b10100010 #MULTIPLY
 
 class CPU:
     """Main CPU class."""
@@ -105,29 +106,32 @@ class CPU:
             # ram = registers 1 - 8
             command = self.ram[self.pc]
 
-            # HLT INSTRUCTION       
-            if command == HLT:
-                running = False    
-            
             # LDI INSTRUCTION
             if command == LDI:
                 self.reg[self.ram[self.pc + 1]] = self.ram[self.pc + 2]
                 move = (command >> 6) + 1
                 self.pc += move
 
+            # HLT INSTRUCTION       
+            elif command == HLT:
+                running = False    
+            
             # PRN INSTRUCTION
-            if command == PRN:
+            elif command == PRN:
                 print(self.reg[self.ram[self.pc + 1]])
                 move = (command >> 6) + 1
                 self.pc += move
 
             # MY CODE DAY 2
             # MULTIPLY INSTRUCTION
-            if command == MUL:
-                self.reg[self.ram[self.pc + 1]] = self.ram[self.pc + 2]
+            elif command == MUL:
+                self.alu("MUL", self.ram[self.pc + 1], self.ram[self.pc + 2]) 
                 move = (command >> 6) + 1
                 self.pc += move
 
+            else:
+                print(f'Unknown instruction {ir} at address {self.pc}')
+                sys.exit(1)
           
 
   #MY CODE DAY 1 Functions
