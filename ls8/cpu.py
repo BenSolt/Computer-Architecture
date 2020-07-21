@@ -21,7 +21,7 @@ class CPU:
         #==============
 
 
-    def load(self):
+    def load(self, program):
         """Load a program into memory."""
 
         address = 0
@@ -42,6 +42,21 @@ class CPU:
         #     self.ram[address] = instruction
         #     address += 1
 
+        with open(program) as f:
+
+            for line in f:
+                line = line.split("#")
+
+                try: 
+                    value = int(line[0],2)
+
+                except ValueError:
+                    continue
+                
+                self.ram[address] = value
+                address += 1
+
+
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -49,6 +64,11 @@ class CPU:
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
         #elif op == "SUB": etc
+
+        #MY CODE Day 2 - multiply
+        elif op == "MUL":
+            self.reg[reg_a] *= self.reg[reg_b]
+        #=================
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -98,6 +118,13 @@ class CPU:
             # PRN INSTRUCTION
             if command == PRN:
                 print(self.reg[self.ram[self.pc + 1]])
+                move = (command >> 6) + 1
+                self.pc += move
+
+            # MY CODE DAY 2
+            # MULTIPLY INSTRUCTION
+            if command == MUL:
+                self.reg[self.ram[self.pc + 1]] = self.ram[self.pc + 2]
                 move = (command >> 6) + 1
                 self.pc += move
 
