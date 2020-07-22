@@ -9,6 +9,12 @@ PRN = 0b01000111 # Print
 
 # MY CODE DAY 2
 MUL = 0b10100010 #MULTIPLY
+ADD = 0b10100000 # adds numbers together
+
+PUSH = 0b01000101 # Add
+POP = 0b01000110 # Remove
+CALL = 0b01010000
+RET = 0b00010001 
 
 class CPU:
     """Main CPU class."""
@@ -19,6 +25,9 @@ class CPU:
         self.ram = [0] * 256
         self.reg = [0] * 8
         self.pc = 0
+        self.sp = 0xf4 # SP = STACK/F4, register 7.
+        self.reg[7] = self.sp
+        
         #==============
 
 
@@ -129,10 +138,83 @@ class CPU:
                 move = (command >> 6) + 1
                 self.pc += move
 
+            elif command == ADD:
+                self.alu("ADD", self.ram[self.pc + 1], self.ram[self.pc + 2]) 
+                move = (command >> 6) + 1
+                self.pc += move
+
+            #MY CODE DAY 3
+            elif command == PUSH:
+                
+                """
+                Push the value in the given register on the stack.
+                Decrement the SP.
+                Copy the value in the given register to the address pointed to by SP.
+                """
+                # decrement stack pointer, SP = R7
+                self.sp -= 1
+
+                # get a value from the given register
+                reg_num = self.ram[self.pc + 1]
+                value = self.reg[reg_num]    
+
+                #put the value at the stack pointer address
+                self.ram[self.sp] = value
+
+                self.pc += 2
+
+            elif command == POP:
+                
+                """
+                Pop the value at the top of the stack into the given register.
+                Copy the value from the address pointed to by SP to the given register.
+                Increment SP.
+                """
+                reg_num2 = self.ram[self.pc +1]
+                self.reg[reg_num2] = self.ram[self.sp]
+                # increment stack pointer
+                self.sp += 1
+                # increment program counter
+                self.pc += 2
+
+
+            # MY CODE DAY 4
+            elif command == CALL:
+                """
+                Calls a subroutine (function) at the address stored in the register.
+                1.The address of the instruction directly after CALL is 
+                pushed onto the stack. This allows us to return to where
+                we left off when the subroutine finishes executing.
+                2.The PC is set to the address stored in the given register. 
+                We jump to that location in RAM and execute the first instruction in the subroutine. 
+                The PC can move forward or backwards from its current location
+               
+                """
+                return_addr = self.pc + 2 # going to RET 2
+                #push on the stack
+                self.sp -= 1
+                self.ram[self.sp] = return_addr
+                # get address to call
+                reg_num = self.ram[self.pc +1]
+                subrouting_addr = self.reg[reg_num]
+                # call it
+                self.pc = subrouting_addr
+
+
+            elif command == RET:
+                """
+                Return from subroutine
+                Pop the value from the top of the stack and store it in PC
+                """
+                #program counter (PC) = memory and stack
+                self.pc = self.ram[self.sp]
+                #stack
+                self.sp += 1
+
+
             else:
                 print(f'Unknown instruction {command} at address {self.pc}')
                 sys.exit(1)
-          
 
   #MY CODE DAY 1 Functions
 
