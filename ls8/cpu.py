@@ -17,21 +17,10 @@ CALL = 0b01010000
 RET = 0b00010001 
 
 #SPRINT========
-"""
-CMP - If they are equal, set the Equal E flag to 1, otherwise set it to 0.
-If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
-If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
-"""
-CMP = 0b10100111 
 
+CMP = 0b10100111 
 JMP = 0b01010100 
-"""
-JEQ - If equal flag is set (true), jump to the address stored in the given register.
-"""
 JEQ = 0b01010101 
-"""
-JNE - If E flag is clear (false, 0), jump to the address stored in the given register.
-"""
 JNE = 0b01010110 
 
 
@@ -104,25 +93,34 @@ class CPU:
         #=================
 
         # SPRINT =============================
-         """
-        Compare registers regA and regB
-        If they are equal, set the Equal E flag to 1, otherwise set it to 0.
-        If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
-        If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
-        """
-        elif: command == CMP:
+ 
+        elif op == "CMP":
+            """
+            Compare registers regA and regB
+            If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+            If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+            If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+            """   
 
+            self.equal = 0
+            self.less = 0
+            self.great = 0
+            # register, memory, program counter 1
+            # register, memory, program counter 2
+            reg_a = self.reg[self.ram[self.pc +1]]
+            reg_b = self.reg[self.ram[self.pc +2]]
+
+            # if reg program counter 1 == reg program counter 2
             if reg_a == reg_b: 
                 self.equal = 1
-
-            if reg_a < reg_b:   
+            
+            # less than
+            elif reg_a < reg_b:
                 self.less = 1
 
-            if reg_a > reg_b:   
+            # greater than   
+            elif reg_a > reg_b:
                 self.great = 1
-
-
-
 
         else:
             raise Exception("Unsupported ALU operation")
@@ -258,30 +256,63 @@ class CPU:
 
 
             #SPRINT CODE ======================================
-            """
-            If they are equal, set the Equal E flag to 1, otherwise set it to 0.
-            If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
-            If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
-            """
-            elif: command == CMP:
+          
 
-                == 1
+
+            elif command == CMP:
+                """
+                If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+                If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+                If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+                """
+                self.alu("CMP", self.ram[self.pc + 1], self.ram[self.pc + 2]) 
+                move = (command >> 6) + 1
+                self.pc += move
                 
-            """
-            JMP - Jump to the address stored in the given register.
-            Set the PC to the address stored in the given register.
-            """
-            elif: command == JMP:
 
-            """
-            JEQ - If equal flag is set (true), jump to the address stored in the given register.
-            """
-            elif: command == JEQ:
+            
+            elif command == JMP:
+                """JMP"""
+                # get address stored in register, aka memory(ram)
+                reg_num = self.ram[self.pc + 1]
+                # jump adddress
+                jump_address = self.reg[reg_num]
+                # Set the PC to the address stored in the given register.
+                self.pc = jump_address
+                
 
-            """
-            JNE - If E flag is clear (false, 0), jump to the address stored in the given register.
-            """
-            elif: command == JNE:
+
+           
+            elif command == JEQ:
+                """
+                JEQ - If equal flag is set (true) jump to the address stored in the given register.  
+                """
+                if self.equal == 1:
+                    reg_num = self.ram[self.pc +1]
+                    # jump to the address stored in the given register. 
+                    jump_address = self.reg[reg_num] 
+                    self.pc = jump_address
+
+                else:
+                    move = (command >> 6) + 1
+                    self.pc += move
+
+
+           
+            elif command == JNE:
+                """
+                JNE - If equal flag is clear (false, 0), jump to the address stored in the given register.
+                """
+                if self.equal == 0:
+                    reg_num = self.ram[self.pc +1]
+                    # jump to the address stored in the given register. 
+                    jump_address = self.reg[reg_num] 
+                    self.pc = jump_address
+                
+                else:
+                    move = (command >> 6) + 1
+                    self.pc += move
+
 
 
 
