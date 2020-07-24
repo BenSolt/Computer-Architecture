@@ -15,8 +15,10 @@ cpu = CPU()
 #DAY 3---
 #cpu.load('examples/stack.ls8')
 #DAY 4---
-cpu.load('examples/call.ls8')
-#SPRINT
+#cpu.load('examples/call.ls8')
+#SPRINT----
+cpu.load('examples/sctest.ls8')
+
 
 cpu.run()
 

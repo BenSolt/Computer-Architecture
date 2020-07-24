@@ -50,6 +50,8 @@ class CPU:
         
         #SPRINT
         self.equal = 0
+        self.less = 0
+        self.great = 0
 
 
     def load(self, program):
@@ -100,6 +102,28 @@ class CPU:
         elif op == "MUL":
             self.reg[reg_a] *= self.reg[reg_b]
         #=================
+
+        # SPRINT =============================
+         """
+        Compare registers regA and regB
+        If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+        If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+        If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+        """
+        elif: command == CMP:
+
+            if reg_a == reg_b: 
+                self.equal = 1
+
+            if reg_a < reg_b:   
+                self.less = 1
+
+            if reg_a > reg_b:   
+                self.great = 1
+
+
+
+
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -257,6 +281,7 @@ class CPU:
             """
             JNE - If E flag is clear (false, 0), jump to the address stored in the given register.
             """
+            elif: command == JNE:
 
 
 
