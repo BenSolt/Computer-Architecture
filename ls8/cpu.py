@@ -16,6 +16,26 @@ POP = 0b01000110 # Remove
 CALL = 0b01010000
 RET = 0b00010001 
 
+#SPRINT========
+"""
+CMP - If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+"""
+CMP = 0b10100111 
+
+JMP = 0b01010100 
+"""
+JEQ - If equal flag is set (true), jump to the address stored in the given register.
+"""
+JEQ = 0b01010101 
+"""
+JNE - If E flag is clear (false, 0), jump to the address stored in the given register.
+"""
+JNE = 0b01010110 
+
+
+
 class CPU:
     """Main CPU class."""
 
@@ -28,7 +48,8 @@ class CPU:
         self.sp = 0xf4 # SP = STACK/F4, register 7.
         self.reg[7] = self.sp
         
-        #==============
+        #SPRINT
+        self.equal = 0
 
 
     def load(self, program):
@@ -190,15 +211,15 @@ class CPU:
                 The PC can move forward or backwards from its current location
                
                 """
-                return_addr = self.pc + 2 # going to RET 2
+                return_address = self.pc + 2 # going to RET 2
                 #push on the stack
                 self.sp -= 1
-                self.ram[self.sp] = return_addr
+                self.ram[self.sp] = return_address
                 # get address to call
                 reg_num = self.ram[self.pc +1]
-                subrouting_addr = self.reg[reg_num]
+                subrouting_address = self.reg[reg_num]
                 # call it
-                self.pc = subrouting_addr
+                self.pc = subrouting_address
 
 
             elif command == RET:
@@ -210,6 +231,33 @@ class CPU:
                 self.pc = self.ram[self.sp]
                 #stack
                 self.sp += 1
+
+
+            #SPRINT CODE ======================================
+            """
+            If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+            If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+            If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+            """
+            elif: command == CMP:
+
+                == 1
+                
+            """
+            JMP - Jump to the address stored in the given register.
+            Set the PC to the address stored in the given register.
+            """
+            elif: command == JMP:
+
+            """
+            JEQ - If equal flag is set (true), jump to the address stored in the given register.
+            """
+            elif: command == JEQ:
+
+            """
+            JNE - If E flag is clear (false, 0), jump to the address stored in the given register.
+            """
+
 
 
             else:
