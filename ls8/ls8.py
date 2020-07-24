@@ -7,5 +7,18 @@ from cpu import *
 
 cpu = CPU()
 
-cpu.load()
+
+#DAY 1---
+# cpu.load('examples/print8.ls8')
+#DAY 2---
+#cpu.load('examples/mult.ls8')
+#DAY 3---
+#cpu.load('examples/stack.ls8')
+#DAY 4---
+#cpu.load('examples/call.ls8')
+#SPRINT----
+cpu.load('examples/sctest.ls8')
+
+
 cpu.run()
+
